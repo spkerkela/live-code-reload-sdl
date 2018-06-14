@@ -8,6 +8,11 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
+bool init() { return !(SDL_Init(SDL_INIT_VIDEO) < 0); }
+void teardown() {
+  SDL_Quit();
+}
+
 void allocateState(State *state) {
   uint64_t StableMemorySize = 512;
   state->StableMemorySize = StableMemorySize;
@@ -15,20 +20,20 @@ void allocateState(State *state) {
 }
 
 int main(int argc, char **argv) {
-  void *handle;
-  float (*cosine)(State *);
+  void *handle = NULL;
+  float (*cosine)(State *) = NULL;
   void (*updateAndRender)(State *, SDL_Window *, SDL_Surface *);
-  char *error;
+  char *error = NULL;
   int iters = 0;
   State state;
   allocateState(&state);
   SDL_Window *window = NULL;
 
   SDL_Surface *screenSurface = NULL;
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+  if (!init()) {
     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
   } else {
-    window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
+    window = SDL_CreateWindow("Loader Example", SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                               SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == NULL) {
@@ -61,7 +66,5 @@ int main(int argc, char **argv) {
   }
   // Destroy window
   SDL_DestroyWindow(window);
-
-  // Quit SDL subsystems
-  SDL_Quit();
+  teardown();
 }
