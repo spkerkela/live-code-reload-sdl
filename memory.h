@@ -2,7 +2,7 @@
 typedef void *Memory;
 
 typedef struct {
-	uint32_t id;
+  uint32_t id;
 } Thing;
 
 typedef struct {
